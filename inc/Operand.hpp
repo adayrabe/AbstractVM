@@ -146,6 +146,8 @@ class Operand : public IOperand
 			int i = 0;
 			if (str[i] == '-')
 				i++;
+			if (!isnumber(str[i]))
+				throw OperandExceptions::WrongCharacterException();
 			while (isnumber(str[i]))
 				i++;
 			if (type == eOperandType::Int8 || type == eOperandType::Int16 || type == eOperandType::Int32)
