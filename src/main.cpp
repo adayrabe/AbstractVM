@@ -24,7 +24,7 @@ int main() {
 
 	vm.push(t.createOperand(eOperandType::Int16, "5"));
 
-	vm.push(t.createOperand(eOperandType::Double, ".0"));
+	vm.push(t.createOperand(eOperandType::Double, "10.0"));
 
 	vm.dump();
 	vm.pop();
@@ -33,5 +33,7 @@ int main() {
 //	vm.add();
 	vm.div();
 	vm.dump();
+	vm.push(t.createOperand(eOperandType::Int8, "49"));
+	vm.print();
 	return 0;
 }

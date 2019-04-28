@@ -63,15 +63,11 @@ void AbstractVM::assertV(IOperand const *operand)
 		throw AbstractVMExceptions::AssertException();
 }
 
-void AbstractVM::getArgs(IOperand const **a, IOperand const **b)
+void AbstractVM::getArg(IOperand const **a)
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::NotEnoughArgumentsException();
 	*a = _stack.top();
-	_stack.pop();
-	if (_stack.empty())
-		throw AbstractVMExceptions::NotEnoughArgumentsException();
-	*b = _stack.top();
 	_stack.pop();
 }
 
@@ -80,7 +76,8 @@ void AbstractVM::add()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArgs(&a, &b);
+	getArg(&a);
+	getArg(&b);
 	push(*b + *a);
 }
 
@@ -89,7 +86,8 @@ void AbstractVM::sub()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArgs(&a, &b);
+	getArg(&a);
+	getArg(&b);
 	push(*b - *a);
 }
 
@@ -98,7 +96,8 @@ void AbstractVM::mul()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArgs(&a, &b);
+	getArg(&a);
+	getArg(&b);
 	push(*b * *a);
 
 }
@@ -108,7 +107,8 @@ void AbstractVM::div()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArgs(&a, &b);
+	getArg(&a);
+	getArg(&b);
 	push(*b / *a);
 }
 
@@ -117,9 +117,22 @@ void AbstractVM::mod()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArgs(&a, &b);
+	getArg(&a);
+	getArg(&b);
 	push(*b % *a);
 }
 
+void AbstractVM::print()
+{
+	if (_stack.empty())
+		throw AbstractVMExceptions::PrintEmptyStackException();
+	if (_stack.top()->getType() != eOperandType::Int8)
+		throw AbstractVMExceptions::PrintNotCharException();
+	char c = static_cast<char>(atoi(_stack.top()->toString().c_str()));
+	std::cout << c << std::endl;
+}
 
-
+void AbstractVM::exit()
+{
+	::exit(EXIT_SUCCESS);
+}

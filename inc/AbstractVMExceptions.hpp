@@ -14,17 +14,27 @@ class AbstractVMExceptions
 		class PopOnEmptyStackException : public std::exception
 		{
 			public:
-				virtual const char *what() const throw();
+				const char *what() const throw();
 		};
 		class AssertException : public std::exception
 		{
 			public:
-				virtual const char *what() const throw();
+				const char *what() const throw();
 		};
 		class NotEnoughArgumentsException : public std::exception
 		{
 			public:
-				virtual const char *what() const throw();
+				const char *what() const throw();
+		};
+		class PrintEmptyStackException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class PrintNotCharException : public std::exception
+		{
+			public:
+				const char *what() const throw();
 		};
 };
 

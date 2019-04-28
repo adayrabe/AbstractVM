@@ -25,15 +25,15 @@ class AbstractVM
 		void pop();
 		void dump();
 		void assertV(IOperand const *operand);
-		void getArgs(IOperand const **a, IOperand const **b);
+		void getArg(IOperand const **a);
 
 		void add();
 		void sub();
 		void mul();
 		void div();
 		void mod();
-
-
+		void print();
+		void exit();
 };
 
 

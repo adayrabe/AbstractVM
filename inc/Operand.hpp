@@ -11,14 +11,6 @@ template <eOperandType T>
 class Operand : public IOperand
 {
 	private:
-//		union Value
-//		{
-//			int8_t c;
-//			int16_t s;
-//			int32_t i;
-//			float f;
-//			double d;
-//		};
 		eOperandType _type;
 		long double _value;
 		std::string _str;
@@ -32,10 +24,10 @@ class Operand : public IOperand
 			checkValue(temp, _type);
 			_value = temp;
 			_precision = static_cast<int>(_type);
-//			if (_type == eOperandType::Double || _type == )
-//			_str = std::to_string(_value);
 		}
+
 		Operand<T>(Operand<T> const &other) = default;
+
 		int getPrecision() const override
 		{
 			return _precision;
@@ -205,4 +197,8 @@ class Operand : public IOperand
 					break;
 			}
 		}
+//		char toChar()
+//		{
+//			return static_cast<char>(_value);
+//		}
 };

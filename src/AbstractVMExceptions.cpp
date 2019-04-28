@@ -22,3 +22,12 @@ const char *AbstractVMExceptions::NotEnoughArgumentsException::what() const thro
 	return "There is not enough arguments to perform the operation";
 }
 
+const char *AbstractVMExceptions::PrintEmptyStackException::what() const throw()
+{
+	return "Trying to print value of an empty stack";
+}
+
+const char *AbstractVMExceptions::PrintNotCharException::what() const throw()
+{
+	return "Trying to print non-char value";
+}
