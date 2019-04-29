@@ -32,8 +32,20 @@ int main() {
 //	vm.assertV(t.createOperand(eOperandType::Double, "250.0"));
 //	vm.add();
 	vm.div();
-	vm.dump();
 	vm.push(t.createOperand(eOperandType::Int8, "49"));
+	vm.dump();
+
+//	vm.exit();
+
 	vm.print();
+
+	AbstractVM other;// = (vm);
+	other.push(t.createOperand(eOperandType::Int8, "90"));
+	other.dump();
+	other = (vm);
+	other.push(t.createOperand(eOperandType::Int8, "110"));
+	other.dump();
+	vm.dump();
+//	system("leaks avm");
 	return 0;
 }

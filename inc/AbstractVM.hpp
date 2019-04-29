@@ -18,12 +18,12 @@ class AbstractVM
 
 		AbstractVM(AbstractVM const &other);
 
-		AbstractVM &operator=(AbstractVM const &other);
+		AbstractVM &operator=(AbstractVM other);
 
 		virtual ~AbstractVM();
 		void push(IOperand const *operand);
 		void pop();
-		void dump();
+		void dump()const;
 		void assertV(IOperand const *operand);
 		void getArg(IOperand const **a);
 
@@ -32,7 +32,7 @@ class AbstractVM
 		void mul();
 		void div();
 		void mod();
-		void print();
+		void print()const;
 		void exit();
 };
 

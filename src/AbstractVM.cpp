@@ -6,19 +6,27 @@
 
 #include "AbstractVM.hpp"
 #include "AbstractVMExceptions.hpp"
+#include "CreateOperand.hpp"
 
 AbstractVM::AbstractVM()
 {}
 
 AbstractVM::AbstractVM(AbstractVM const &other)
 {
-	*this = other;
+	std::stack <IOperand const *> temp = other._stack;
+	CreateOperand t;
+	while (!temp.empty())
+	{
+		_stack.push(t.createOperand(temp.top()->getType(), temp.top()->toString()));
+		temp.pop();
+	}
+//	_stack = other._stack;
 }
 
-//TODO: add correct variable assignments
-AbstractVM &AbstractVM::operator=(AbstractVM const &other)
+AbstractVM &AbstractVM::operator=(AbstractVM other)
 {
-	static_cast<void>(other);
+//	std::swap(_stack, other._stack);
+	_stack.swap(other._stack);
 	return *this;
 }
 
@@ -43,7 +51,7 @@ void AbstractVM::pop()
 	_stack.pop();
 }
 
-void AbstractVM::dump()
+void AbstractVM::dump()const
 {
 	std::stack<IOperand const *> temp = _stack;
 	std::cout << "[";
@@ -122,7 +130,7 @@ void AbstractVM::mod()
 	push(*b % *a);
 }
 
-void AbstractVM::print()
+void AbstractVM::print() const
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::PrintEmptyStackException();
