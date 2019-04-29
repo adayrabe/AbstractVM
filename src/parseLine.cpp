@@ -1,33 +1,13 @@
 //
 // Created by Dayrabekov Artem on 2019-04-29.
 //
+#include "functions.hpp"
 
-#include "parseLine.hpp"
-#include <vector>
-
-void skipSpaces(std::string &temp)
-{
-	size_t i = 0;
-	while (temp[i] && isspace(temp[i]))
-		i++;
-	temp = temp.erase(0, i);
-}
-
-std::string getWord(std::string &line)
-{
-	std::string oper;
-	size_t i = 0;
-	for (; line[i] && !isspace(line[i]) && line[i] != COMMENT_CHAR; i++)
-		oper[i] = line[i];
-	line = line.erase(0, i);
-	return oper;
-}
-
-void getFromArray(std::string &oper, AbstractVM &vm)
+void doFromArray(std::string &oper, AbstractVM &vm)
 {
 	void (AbstractVM::*func[])() = {&AbstractVM::pop, &AbstractVM::add, &AbstractVM::sub, &AbstractVM::mul,
-									&AbstractVM::div, &AbstractVM::mod};
-	std::vector<std::string> names = {"pop", "add", "sub", "mul", "div", "mod", "null"};
+									&AbstractVM::div, &AbstractVM::mod, &AbstractVM::exit};
+	std::vector<std::string> names = {"pop", "add", "sub", "mul", "div", "mod", "exit", "null"};
 	int i = 0;
 	while (names[i] != "null")
 	{
@@ -39,22 +19,23 @@ void getFromArray(std::string &oper, AbstractVM &vm)
 		i++;
 	}
 	if (names[i] == "null")
-		throw;
+		throw ParseExceptions::WrongCommandException();
 }
 
 void doOper(std::string &line, AbstractVM &vm, std::vector<std::string>&messages)
 {
 	std::string oper = getWord(line);
 	if (oper == "push" || oper == "assert")
-	{
-		messages.push_back("s");
-	}
+		doWithNumber(line, oper, vm);
 	else if (oper == "print" || oper == "dump")
 	{
-
+		if (oper == "print")
+			messages.emplace_back(vm.print());
+		else
+			messages.emplace_back(vm.dump());
 	}
 	else
-		getFromArray(line, vm);
+		doFromArray(oper, vm);
 }
 
 bool parseLine(std::string &line, std::vector<std::string>&messages, bool readFromCin, AbstractVM &vm)
@@ -68,6 +49,6 @@ bool parseLine(std::string &line, std::vector<std::string>&messages, bool readFr
 	}
 	skipSpaces(line);
 	if (line[0] && line[0] != COMMENT_CHAR)
-		throw;
+		throw ParseExceptions::WrongSymbolsAtTheEndOfLineException();
 	return true;
 }

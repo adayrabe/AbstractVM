@@ -7,9 +7,14 @@
 #include <float.h>
 #include <fstream>
 #include <vector>
-#include "parseLine.hpp"
+#include "functions.hpp"
 //#include <errno.h>
 
+void printMessages(std::vector<std::string> &messages)
+{
+	for (auto i : messages)
+		std::cout << i;
+}
 
 void parse(std::istream &is, bool readFromCin)
 {
@@ -27,7 +32,7 @@ void parse(std::istream &is, bool readFromCin)
 		catch (std::exception &e)
 		{
 			std::cout << "Error - " << e.what() << std::endl;
-			break;
+//			break;
 		}
 	}
 	try
@@ -39,14 +44,15 @@ void parse(std::istream &is, bool readFromCin)
 		std::cout << "Error - " << e.what() << std::endl;
 		return ;
 	}
+	printMessages(messages);
 }
 
 
 int main(int argc, char **argv)
 {
-	if (argc == 0)
+	if (argc == 1)
 		parse(std::cin, true);
-	else if (argc == 1)
+	else if (argc == 2)
 	{
 		std::ifstream ifs(argv[1]);
 		if (ifs)

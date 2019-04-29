@@ -2,22 +2,31 @@
 // Created by Dayrabekov Artem on 2019-04-29.
 //
 
+#include <ParseExceptions.hpp>
+
 #include "ParseExceptions.hpp"
 
-ParseExceptions::ParseExceptions()
-{}
-
-ParseExceptions::ParseExceptions(ParseExceptions const &other)
+const char *ParseExceptions::WrongCommandException::what() const throw()
 {
-	*this = other;
+	return "Wrong command";
 }
 
-//TODO: add correct variable assignments
-ParseExceptions &ParseExceptions::operator=(ParseExceptions const &other)
+const char *ParseExceptions::WrongSymbolsAtTheEndOfLineException::what() const throw()
 {
-	static_cast<void>(other);
-	return *this;
+	return "Wrong symbols at the end of line";
 }
 
-ParseExceptions::~ParseExceptions()
-{}
+const char *ParseExceptions::NoOpenBracketException::what() const throw()
+{
+	return "No open bracket to write the number in";
+}
+
+const char *ParseExceptions::WrongOperandExcetion::what() const throw()
+{
+	return "Wrong operand";
+}
+
+const char *ParseExceptions::NoClosingBracketException::what() const throw()
+{
+	return "No closing bracket for number";
+}

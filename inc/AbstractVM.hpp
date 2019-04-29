@@ -24,7 +24,7 @@ class AbstractVM
 		~AbstractVM();
 		void push(IOperand const *operand);
 		void pop();
-		void dump()const;
+		std::string dump()const;
 		void assertV(IOperand const *operand);
 		void getArg(IOperand const **a);
 
@@ -33,7 +33,7 @@ class AbstractVM
 		void mul();
 		void div();
 		void mod();
-		void print()const;
+		std::string print()const;
 		void exit();
 		void tryToTerminate();
 };

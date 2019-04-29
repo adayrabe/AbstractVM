@@ -53,18 +53,20 @@ void AbstractVM::pop()
 	_stack.pop();
 }
 
-void AbstractVM::dump()const
+std::string AbstractVM::dump()const
 {
+	std::string res;
 	std::stack<IOperand const *> temp = _stack;
-	std::cout << "[";
+	res += "[";
 	while (!temp.empty())
 	{
-		std::cout << temp.top()->toString();
+		res += temp.top()->toString();
 		temp.pop();
 		if (!temp.empty())
-			std::cout << ", ";
+			res += ", ";
 	}
-	std::cout << "]" << std::endl;
+	res += "]\n";
+	return res;
 }
 
 void AbstractVM::assertV(IOperand const *operand)
@@ -132,14 +134,15 @@ void AbstractVM::mod()
 	push(*b % *a);
 }
 
-void AbstractVM::print() const
+std::string AbstractVM::print() const
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::PrintEmptyStackException();
 	if (_stack.top()->getType() != eOperandType::Int8)
 		throw AbstractVMExceptions::PrintNotCharException();
-	char c = static_cast<char>(atoi(_stack.top()->toString().c_str()));
-	std::cout << c << std::endl;
+	std::string res;
+	res += static_cast<char>(atoi(_stack.top()->toString().c_str()));
+	return res;
 }
 
 void AbstractVM::exit()

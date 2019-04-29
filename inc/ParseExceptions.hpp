@@ -11,13 +11,31 @@
 class ParseExceptions
 {
 	public:
-		ParseExceptions();
-
-		ParseExceptions(ParseExceptions const &other);
-
-		ParseExceptions &operator=(ParseExceptions const &other);
-
-		virtual ~ParseExceptions();
+		class WrongCommandException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class WrongSymbolsAtTheEndOfLineException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class NoOpenBracketException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class WrongOperandExcetion : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class NoClosingBracketException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
 };
 
 

@@ -53,7 +53,15 @@ class Operand : public IOperand
 			if (type == eOperandType::Int8 || type == eOperandType::Int16 || type == eOperandType::Int32)
 				return std::to_string(static_cast<long>(num));
 			else
-				return std::to_string(num);
+			{
+//				return std::to_string(static_cast<long double>(num));
+
+				std::stringstream ss;
+				ss << num;
+				std::string res;
+				ss >> res;
+				return res;
+			}
 		}
 
 		const IOperand *operator+(IOperand const &rhs) const override
@@ -158,7 +166,7 @@ class Operand : public IOperand
 					throw OperandExceptions::WrongCharacterException();
 				while (isnumber(str[i]))
 					i++;
-				_str = std::to_string(res);
+				_str = str;
 			}
 			while (isspace(str[i]))
 				i++;
