@@ -36,6 +36,16 @@ class AbstractVMExceptions
 			public:
 				const char *what() const throw();
 		};
+		class TwoExitCommandException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
+		class NoExitCommandException : public std::exception
+		{
+			public:
+				const char *what() const throw();
+		};
 };
 
 

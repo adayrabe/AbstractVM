@@ -13,6 +13,7 @@ class AbstractVM
 {
 	private:
 		std::stack<IOperand const *>_stack;
+		bool _exited;
 	public:
 		AbstractVM();
 
@@ -20,7 +21,7 @@ class AbstractVM
 
 		AbstractVM &operator=(AbstractVM other);
 
-		virtual ~AbstractVM();
+		~AbstractVM();
 		void push(IOperand const *operand);
 		void pop();
 		void dump()const;
@@ -34,6 +35,7 @@ class AbstractVM
 		void mod();
 		void print()const;
 		void exit();
+		void tryToTerminate();
 };
 
 

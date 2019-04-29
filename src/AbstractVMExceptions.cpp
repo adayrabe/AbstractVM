@@ -31,3 +31,13 @@ const char *AbstractVMExceptions::PrintNotCharException::what() const throw()
 {
 	return "Trying to print non-char value";
 }
+
+const char *AbstractVMExceptions::TwoExitCommandException::what() const throw()
+{
+	return "Exit command has already been used once";
+}
+
+const char *AbstractVMExceptions::NoExitCommandException::what() const throw()
+{
+	return "No exit command found";
+}

@@ -8,7 +8,7 @@
 #include "AbstractVMExceptions.hpp"
 #include "CreateOperand.hpp"
 
-AbstractVM::AbstractVM()
+AbstractVM::AbstractVM():_exited(false)
 {}
 
 AbstractVM::AbstractVM(AbstractVM const &other)
@@ -20,6 +20,7 @@ AbstractVM::AbstractVM(AbstractVM const &other)
 		_stack.push(t.createOperand(temp.top()->getType(), temp.top()->toString()));
 		temp.pop();
 	}
+	_exited = other._exited;
 //	_stack = other._stack;
 }
 
@@ -27,6 +28,7 @@ AbstractVM &AbstractVM::operator=(AbstractVM other)
 {
 //	std::swap(_stack, other._stack);
 	_stack.swap(other._stack);
+	_exited = other._exited;
 	return *this;
 }
 
@@ -142,5 +144,14 @@ void AbstractVM::print() const
 
 void AbstractVM::exit()
 {
-	::exit(EXIT_SUCCESS);
+	if (_exited)
+		throw AbstractVMExceptions::TwoExitCommandException();
+	_exited = true;
+//	::exit(EXIT_SUCCESS);
+}
+
+void AbstractVM::tryToTerminate()
+{
+	if (!_exited)
+		throw AbstractVMExceptions::NoExitCommandException();
 }
