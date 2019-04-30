@@ -56,15 +56,11 @@ void AbstractVM::pop()
 void AbstractVM::dump()
 {
 	std::stack<IOperand const *> temp = _stack;
-	std::cout << "[";
 	while (!temp.empty())
 	{
-		std::cout << temp.top()->toString();
+		std::cout << temp.top()->toString() << std::endl;
 		temp.pop();
-		if (!temp.empty())
-			std::cout << ", ";
 	}
-	std::cout << "]\n";
 }
 
 void AbstractVM::assertV(IOperand const *operand)
@@ -165,4 +161,18 @@ void AbstractVM::tryToTerminate()
 {
 	if (!_exited)
 		throw AbstractVMExceptions::NoExitCommandException();
+}
+
+void AbstractVM::showStack()
+{
+	std::stack<IOperand const *> temp = _stack;
+	std::cout << "[";
+	while (!temp.empty())
+	{
+		std::cout << temp.top()->toString();
+		temp.pop();
+		if (!temp.empty())
+			std::cout << ", ";
+	}
+	std::cout << "]\n";
 }

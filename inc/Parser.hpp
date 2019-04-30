@@ -36,6 +36,7 @@ class Parser
 		std::string getNum(std::string &line);
 
 		const std::vector<t_lexeme *> &getOperands() const;
+		void printStack(std::string oper);
 
 };
 

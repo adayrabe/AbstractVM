@@ -36,6 +36,7 @@ class AbstractVM
 		void print();
 		void exit();
 		void tryToTerminate();
+		void showStack();
 };
 
 

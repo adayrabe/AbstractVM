@@ -7,6 +7,7 @@
 #include "Parser.hpp"
 #include "functions.hpp"
 #include "CreateOperand.hpp"
+#include <iomanip>
 
 
 Parser::Parser(Parser const &other)
@@ -101,9 +102,15 @@ void Parser::addOper(std::string &line, int l)
 		if (names[i] == "null")
 			throw ParseExceptions::WrongCommandException();
 		t_lexeme *temp = new t_lexeme(oper, l);
-
 		if (_flags.printStack || _flags.doOperations)
-			doOperator(temp, *_vm);
+		{
+			if (!(oper == "print" || oper == "dump"))
+				doOperator(temp, *_vm);
+			if (_flags.printStack)
+				printStack(oper);
+			if (oper == "print" || oper == "dump")
+				doOperator(temp, *_vm);
+		}
 		else
 			_operands.emplace_back(temp);
 	}
@@ -135,7 +142,11 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	std::string num = getNum(value);
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
 	if (_flags.doOperations || _flags.printStack)
+	{
 		doOperator(temp, *_vm);
+		if (_flags.printStack)
+			printStack(oper);
+	}
 	else
 		_operands.emplace_back(temp);
 }
@@ -175,4 +186,10 @@ std::string Parser::getNum(std::string &line)
 const std::vector<t_lexeme *> &Parser::getOperands() const
 {
 	return _operands;
+}
+
+void Parser::printStack(std::string oper)
+{
+	std::cout << "Oper: " << std::setprecision(5) << oper << " | ";
+	_vm->showStack();
 }
