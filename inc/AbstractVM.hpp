@@ -24,16 +24,16 @@ class AbstractVM
 		~AbstractVM();
 		void push(IOperand const *operand);
 		void pop();
-		std::string dump()const;
+		void dump();
 		void assertV(IOperand const *operand);
-		void getArg(IOperand const **a);
+		void getArgs(IOperand const **a, IOperand const **b);
 
 		void add();
 		void sub();
 		void mul();
 		void div();
 		void mod();
-		std::string print()const;
+		void print();
 		void exit();
 		void tryToTerminate();
 };

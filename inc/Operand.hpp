@@ -57,10 +57,17 @@ class Operand : public IOperand
 				return std::to_string(static_cast<long>(num));
 			else
 			{
-				std::stringstream ss;
-				ss << std::setprecision(precision) << num;
 				std::string res;
-				ss >> res;
+
+				if (precision > 6)
+				{
+					std::stringstream ss;
+
+					ss << std::setprecision(precision) << num;
+					ss >> res;
+				}
+				else
+					res = std::to_string(num);
 				return res;
 			}
 		}

@@ -5,35 +5,48 @@
 #include <stack>
 #include "AbstractVM.hpp"
 #include <float.h>
-#include <fstream>
-#include <vector>
 #include "functions.hpp"
-//#include <errno.h>
+#include "Parser.hpp"
+#include <fstream>
 
-void printMessages(std::vector<std::string> &messages)
+void checkFlag(std::string const &str, t_flags *flags)
 {
-	for (auto i : messages)
-		std::cout << i;
+	if (str == "-e")
+		flags->showErrors = true;
+	else if (str == "-s")
+		flags->printStack = true;
+	else
+	{
+		std::cout << "Error - unknown flag. Available flags:" << std::endl;
+		std::cout << "-e : Shows all of the possible errors" << std::endl;
+		std::cout << "-s : Shows the operator that is executed and the stack after this operator" << std::endl;
+
+		exit(EXIT_FAILURE);
+	}
 }
 
-void parse(std::istream &is, bool readFromCin)
+std::vector<std::string> parseFlags(int ac, char **av, t_flags *flags)
 {
-	std::string line;
-	std::vector<std::string> messages;
+	std::vector <std::string> res;
+	for (int i = 1; i < ac; i++)
+	{
+		if (av[i][0] == '-')
+			checkFlag(av[i], flags);
+		else
+			res.emplace_back(av[i]);
+	}
+	return res;
+}
+
+void parseInput(bool fromStdIn, t_flags &flags, std::istream &is)
+{
+	Parser p(fromStdIn, flags);
 	AbstractVM vm;
 
-	while (getline(is, line))
+	p.parse(is);
+	for (size_t i = 0; i < p.getOperands().size(); i++)
 	{
-		try
-		{
-			if (!parseLine(line, messages, readFromCin, vm))
-				break;
-		}
-		catch (std::exception &e)
-		{
-			std::cout << "Error - " << e.what() << std::endl;
-//			break;
-		}
+		doOperator(p.getOperands()[i], vm);
 	}
 	try
 	{
@@ -42,27 +55,31 @@ void parse(std::istream &is, bool readFromCin)
 	catch (std::exception &e)
 	{
 		std::cout << "Error - " << e.what() << std::endl;
-		return ;
 	}
-	printMessages(messages);
+
 }
 
+void parseFile(std::string &str, t_flags &flags)
+{
+	std::ifstream ifs(str);
+	if (ifs)
+		parseInput(false, flags, ifs);
+	else
+		std::cout << "Error - " << strerror(errno) << std::endl;
+}
 
 int main(int argc, char **argv)
 {
-	if (argc == 1)
-		parse(std::cin, true);
-	else if (argc == 2)
-	{
-		std::ifstream ifs(argv[1]);
-		if (ifs)
-		{
-			parse(ifs, false);
-		}
-		else
-			std::cout << "Error - " << strerror(errno) << std::endl;
-	}
+	t_flags flags;
+	flags.printStack = false;
+	flags.showErrors = false;
+	std::vector <std::string> files = parseFlags(argc, argv, &flags);
+	if (files.empty())
+		parseInput(true, flags, std::cin);
 	else
-		std::cout << "Too many arguments" << std::endl;
+	{
+		for (auto v: files)
+			parseFile(v, flags);
+	}
 	return 0;
 }

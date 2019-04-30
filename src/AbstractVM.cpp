@@ -53,20 +53,18 @@ void AbstractVM::pop()
 	_stack.pop();
 }
 
-std::string AbstractVM::dump()const
+void AbstractVM::dump()
 {
-	std::string res;
 	std::stack<IOperand const *> temp = _stack;
-	res += "[";
+	std::cout << "[";
 	while (!temp.empty())
 	{
-		res += temp.top()->toString();
+		std::cout << temp.top()->toString();
 		temp.pop();
 		if (!temp.empty())
-			res += ", ";
+			std::cout << ", ";
 	}
-	res += "]\n";
-	return res;
+	std::cout << "]\n";
 }
 
 void AbstractVM::assertV(IOperand const *operand)
@@ -75,11 +73,18 @@ void AbstractVM::assertV(IOperand const *operand)
 		throw AbstractVMExceptions::AssertException();
 }
 
-void AbstractVM::getArg(IOperand const **a)
+void AbstractVM::getArgs(IOperand const **a, IOperand const **b)
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::NotEnoughArgumentsException();
 	*a = _stack.top();
+	_stack.pop();
+	if (_stack.empty())
+	{
+		_stack.push(*a);
+		throw AbstractVMExceptions::NotEnoughArgumentsException();
+	}
+	*b = _stack.top();
 	_stack.pop();
 }
 
@@ -88,8 +93,7 @@ void AbstractVM::add()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArg(&a);
-	getArg(&b);
+	getArgs(&a, &b);
 	push(*b + *a);
 }
 
@@ -98,8 +102,7 @@ void AbstractVM::sub()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArg(&a);
-	getArg(&b);
+	getArgs(&a, &b);
 	push(*b - *a);
 }
 
@@ -108,8 +111,7 @@ void AbstractVM::mul()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArg(&a);
-	getArg(&b);
+	getArgs(&a, &b);
 	push(*b * *a);
 
 }
@@ -119,8 +121,7 @@ void AbstractVM::div()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArg(&a);
-	getArg(&b);
+	getArgs(&a, &b);
 	push(*b / *a);
 }
 
@@ -129,20 +130,17 @@ void AbstractVM::mod()
 	IOperand const *a;
 	IOperand const *b;
 
-	getArg(&a);
-	getArg(&b);
+	getArgs(&a, &b);
 	push(*b % *a);
 }
 
-std::string AbstractVM::print() const
+void AbstractVM::print()
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::PrintEmptyStackException();
 	if (_stack.top()->getType() != eOperandType::Int8)
 		throw AbstractVMExceptions::PrintNotCharException();
-	std::string res;
-	res += static_cast<char>(atoi(_stack.top()->toString().c_str()));
-	return res;
+	std::cout << static_cast<char>(atoi(_stack.top()->toString().c_str())) << std::endl;
 }
 
 void AbstractVM::exit()
