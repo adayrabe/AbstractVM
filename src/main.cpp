@@ -26,6 +26,11 @@ void checkFlag(std::string const &str, t_flags *flags)
 
 		exit(EXIT_FAILURE);
 	}
+	if (flags->printStack && flags->doOperations)
+	{
+		std::cout << "Error - only one of two flags -s or -o can be included" << std::endl;
+		exit (EXIT_FAILURE);
+	}
 }
 
 std::vector<std::string> parseFlags(int ac, char **av, t_flags *flags)

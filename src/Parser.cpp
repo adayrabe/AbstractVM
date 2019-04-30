@@ -102,15 +102,13 @@ void Parser::addOper(std::string &line, int l)
 		if (names[i] == "null")
 			throw ParseExceptions::WrongCommandException();
 		t_lexeme *temp = new t_lexeme(oper, l);
-		if (_flags.printStack || _flags.doOperations)
+		if (_flags.printStack && oper != "print" && oper != "dump")
 		{
-			if (!(oper == "print" || oper == "dump"))
-				doOperator(temp, *_vm);
-			if (_flags.printStack)
-				printStack(oper);
-			if (oper == "print" || oper == "dump")
-				doOperator(temp, *_vm);
+			doOperator(temp, *_vm);
+			printStack(oper);
 		}
+		if (_flags.doOperations)
+			doOperator(temp, *_vm);
 		else
 			_operands.emplace_back(temp);
 	}
@@ -141,12 +139,13 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	eOperandType type = getType(value);
 	std::string num = getNum(value);
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
-	if (_flags.doOperations || _flags.printStack)
+	if (_flags.printStack)
 	{
 		doOperator(temp, *_vm);
-		if (_flags.printStack)
-			printStack(oper);
+		printStack(oper);
 	}
+	if (_flags.doOperations)
+		doOperator(temp, *_vm);
 	else
 		_operands.emplace_back(temp);
 }
