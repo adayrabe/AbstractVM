@@ -16,7 +16,7 @@ class Parser
 		std::vector<t_lexeme *> _operands;
 		t_flags _flags;
 		AbstractVM *_vm;
-
+		bool _hasError;
 	public:
 		Parser(bool fromStdIn, t_flags &flags);
 
@@ -36,7 +36,9 @@ class Parser
 		std::string getNum(std::string &line);
 
 		const std::vector<t_lexeme *> &getOperands() const;
-		void printStack(std::string oper);
+		void printStack(std::string oper, std::string value);
+
+		bool isHasError() const;
 
 };
 

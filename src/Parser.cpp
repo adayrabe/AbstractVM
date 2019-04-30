@@ -35,6 +35,7 @@ Parser::Parser(bool fromStdIn, t_flags &flags):_fromStdin(fromStdIn)
 	_flags.showErrors = flags.showErrors;
 	_flags.printStack = flags.printStack;
 	_vm = new AbstractVM();
+	_hasError = false;
 }
 
 bool Parser::parse(std::istream &is)
@@ -53,6 +54,7 @@ bool Parser::parse(std::istream &is)
 		catch (std::exception &e)
 		{
 			std::cout << "Error at line " << l << " - " << e.what() << std::endl;
+			_hasError = true;
 			if (!_flags.showErrors)
 				return false;
 		}
@@ -66,10 +68,13 @@ bool Parser::parse(std::istream &is)
 		catch (std::exception &e)
 		{
 			std::cout << "Error - " << e.what() << std::endl;
+			_hasError = false;
 			if (!_flags.showErrors)
 				return false;
 		}
 	}
+	if (_flags.printStack)
+		std::cout << "-------------------------------------" << std::endl;
 	return true;
 }
 
@@ -80,6 +85,8 @@ bool Parser::parseLine(std::string &line, int l)
 	{
 		if (line[0] == COMMENT_CHAR && line[1] == COMMENT_CHAR && _fromStdin)
 			return false;
+		if (line[0] == COMMENT_CHAR)
+			return true;
 		addOper(line, l);
 	}
 	skipSpaces(line);
@@ -102,13 +109,16 @@ void Parser::addOper(std::string &line, int l)
 		if (names[i] == "null")
 			throw ParseExceptions::WrongCommandException();
 		t_lexeme *temp = new t_lexeme(oper, l);
-		if (_flags.printStack && oper != "print" && oper != "dump")
+		if (_flags.printStack)
 		{
-			doOperator(temp, *_vm);
-			printStack(oper);
+			if (oper != "print" && oper != "dump")
+				doOperator(temp, *_vm, false);
+			printStack(oper, std::string());
+			if (oper == "print" || oper == "dump")
+				doOperator(temp, *_vm, false);
 		}
 		if (_flags.doOperations)
-			doOperator(temp, *_vm);
+			doOperator(temp, *_vm, false);
 		else
 			_operands.emplace_back(temp);
 	}
@@ -136,16 +146,20 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 {
 	skipSpaces(line);
 	std::string value = getWord(line);
+	std::string val = value;
 	eOperandType type = getType(value);
 	std::string num = getNum(value);
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
 	if (_flags.printStack)
 	{
-		doOperator(temp, *_vm);
-		printStack(oper);
+		if (oper != "assert")
+			doOperator(temp, *_vm, false);
+		printStack(oper, val);
+		if (oper == "assert")
+			doOperator(temp, *_vm, false);
 	}
 	if (_flags.doOperations)
-		doOperator(temp, *_vm);
+		doOperator(temp, *_vm, false);
 	else
 		_operands.emplace_back(temp);
 }
@@ -187,8 +201,13 @@ const std::vector<t_lexeme *> &Parser::getOperands() const
 	return _operands;
 }
 
-void Parser::printStack(std::string oper)
+void Parser::printStack(std::string oper, std::string value)
 {
-	std::cout << "Oper: " << std::setprecision(5) << oper << " | ";
+	std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << value << " | " ;
 	_vm->showStack();
+}
+
+bool Parser::isHasError() const
+{
+	return _hasError;
 }

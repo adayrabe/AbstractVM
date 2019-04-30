@@ -53,15 +53,17 @@ void parseInput(bool fromStdIn, t_flags &flags, std::istream &is)
 
 	if (!p.parse(is))
 		return ;
+	bool hasError = p.isHasError();
 	for (size_t i = 0; i < p.getOperands().size(); i++)
 	{
 		try
 		{
-			doOperator(p.getOperands()[i], vm);
+			doOperator(p.getOperands()[i], vm, hasError);
 		}
 		catch (std::exception &e)
 		{
 			std::cout << "Error at line " << p.getOperands()[i]->line << " - " << e.what() << std::endl;
+			hasError = true;
 			if (!flags.showErrors)
 				return ;
 		}
@@ -97,8 +99,15 @@ int main(int argc, char **argv)
 		parseInput(true, flags, std::cin);
 	else
 	{
-		for (auto v: files)
-			parseFile(v, flags);
+		if (files.size() < 2)
+			parseFile(files[0], flags);
+		else
+			for (auto v: files)
+			{
+				std::cout << "FILE " << v << std::endl;
+				parseFile(v, flags);
+				std::cout << "===========================================" << std::endl;
+			}
 	}
 	return 0;
 }

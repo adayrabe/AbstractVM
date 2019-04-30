@@ -29,6 +29,6 @@ typedef struct 	s_flags
 	bool doOperations = false;
 }				t_flags;
 
-void doOperator(t_lexeme *oper, AbstractVM &vm);
+void doOperator(t_lexeme *oper, AbstractVM &vm, bool hasError);
 
 #endif //ABSTRACTVM_PARSELINE_HPP
