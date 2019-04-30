@@ -15,11 +15,14 @@ void checkFlag(std::string const &str, t_flags *flags)
 		flags->showErrors = true;
 	else if (str == "-s")
 		flags->printStack = true;
+	else if (str == "-o")
+		flags->doOperations = true;
 	else
 	{
 		std::cout << "Error - unknown flag. Available flags:" << std::endl;
 		std::cout << "-e : Shows all of the possible errors" << std::endl;
 		std::cout << "-s : Shows the operator that is executed and the stack after this operator" << std::endl;
+		std::cout << "-o : Does the operator right away without waiting for the end of an input" << std::endl;
 
 		exit(EXIT_FAILURE);
 	}
@@ -43,20 +46,32 @@ void parseInput(bool fromStdIn, t_flags &flags, std::istream &is)
 	Parser p(fromStdIn, flags);
 	AbstractVM vm;
 
-	p.parse(is);
+	if (!p.parse(is))
+		return ;
 	for (size_t i = 0; i < p.getOperands().size(); i++)
 	{
-		doOperator(p.getOperands()[i], vm);
+		try
+		{
+			doOperator(p.getOperands()[i], vm);
+		}
+		catch (std::exception &e)
+		{
+			std::cout << "Error at line " << p.getOperands()[i]->line << " - " << e.what() << std::endl;
+			if (!flags.showErrors)
+				return ;
+		}
 	}
-	try
+	if (!flags.doOperations && !flags.printStack)
 	{
-		vm.tryToTerminate();
+		try
+		{
+			vm.tryToTerminate();
+		}
+		catch (std::exception &e)
+		{
+			std::cout << "Error - " << e.what() << std::endl;
+		}
 	}
-	catch (std::exception &e)
-	{
-		std::cout << "Error - " << e.what() << std::endl;
-	}
-
 }
 
 void parseFile(std::string &str, t_flags &flags)
@@ -71,8 +86,7 @@ void parseFile(std::string &str, t_flags &flags)
 int main(int argc, char **argv)
 {
 	t_flags flags;
-	flags.printStack = false;
-	flags.showErrors = false;
+
 	std::vector <std::string> files = parseFlags(argc, argv, &flags);
 	if (files.empty())
 		parseInput(true, flags, std::cin);

@@ -95,6 +95,8 @@ void AbstractVM::add()
 
 	getArgs(&a, &b);
 	push(*b + *a);
+	delete a;
+	delete b;
 }
 
 void AbstractVM::sub()
@@ -104,6 +106,8 @@ void AbstractVM::sub()
 
 	getArgs(&a, &b);
 	push(*b - *a);
+	delete a;
+	delete b;
 }
 
 void AbstractVM::mul()
@@ -113,6 +117,8 @@ void AbstractVM::mul()
 
 	getArgs(&a, &b);
 	push(*b * *a);
+	delete a;
+	delete b;
 
 }
 
@@ -123,6 +129,8 @@ void AbstractVM::div()
 
 	getArgs(&a, &b);
 	push(*b / *a);
+	delete a;
+	delete b;
 }
 
 void AbstractVM::mod()
@@ -132,6 +140,8 @@ void AbstractVM::mod()
 
 	getArgs(&a, &b);
 	push(*b % *a);
+	delete a;
+	delete b;
 }
 
 void AbstractVM::print()

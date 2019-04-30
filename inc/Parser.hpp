@@ -25,10 +25,10 @@ class Parser
 		Parser &operator=(Parser const &other);
 
 		virtual ~Parser();
-		void parse(std::istream &is);
+
+		bool parse(std::istream &is);
 		bool parseLine(std::string &line, int l);
 		void addOper(std::string &line, int l);
-//		void doFromArray(std::string &oper);
 		void skipSpaces(std::string &temp);
 		std::string getWord(std::string &line);
 		void doWithNumber(std::string &line, std::string &oper, int l);

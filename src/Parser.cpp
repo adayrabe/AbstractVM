@@ -26,19 +26,17 @@ Parser::~Parser()
 	delete _vm;
 	for (size_t i = 0; i < _operands.size(); i++)
 		delete _operands[i];
-//	while (!_operands.empty())
-//		;
 }
 
 Parser::Parser(bool fromStdIn, t_flags &flags):_fromStdin(fromStdIn)
 {
-	_flags.doOperaions = flags.doOperaions;
+	_flags.doOperations = flags.doOperations;
 	_flags.showErrors = flags.showErrors;
 	_flags.printStack = flags.printStack;
 	_vm = new AbstractVM();
 }
 
-void Parser::parse(std::istream &is)
+bool Parser::parse(std::istream &is)
 {
 	std::string line;
 	int l = 0;
@@ -55,10 +53,10 @@ void Parser::parse(std::istream &is)
 		{
 			std::cout << "Error at line " << l << " - " << e.what() << std::endl;
 			if (!_flags.showErrors)
-				return ;
+				return false;
 		}
 	}
-	if (_flags.doOperaions || _flags.printStack)
+	if (_flags.doOperations || _flags.printStack)
 	{
 		try
 		{
@@ -67,8 +65,11 @@ void Parser::parse(std::istream &is)
 		catch (std::exception &e)
 		{
 			std::cout << "Error - " << e.what() << std::endl;
+			if (!_flags.showErrors)
+				return false;
 		}
 	}
+	return true;
 }
 
 bool Parser::parseLine(std::string &line, int l)
@@ -101,7 +102,7 @@ void Parser::addOper(std::string &line, int l)
 			throw ParseExceptions::WrongCommandException();
 		t_lexeme *temp = new t_lexeme(oper, l);
 
-		if (_flags.printStack || _flags.doOperaions)
+		if (_flags.printStack || _flags.doOperations)
 			doOperator(temp, *_vm);
 		else
 			_operands.emplace_back(temp);
@@ -133,7 +134,7 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	eOperandType type = getType(value);
 	std::string num = getNum(value);
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
-	if (_flags.doOperaions || _flags.printStack)
+	if (_flags.doOperations || _flags.printStack)
 		doOperator(temp, *_vm);
 	else
 		_operands.emplace_back(temp);
@@ -175,21 +176,3 @@ const std::vector<t_lexeme *> &Parser::getOperands() const
 {
 	return _operands;
 }
-
-//void Parser::doFromArray(std::string &oper)
-//{
-//	void (AbstractVM::*func[])() = {&AbstractVM::pop, &AbstractVM::add, &AbstractVM::sub, &AbstractVM::mul,
-//									&AbstractVM::div, &AbstractVM::mod, &AbstractVM::exit, &AbstractVM::print,
-//									&AbstractVM::dump};
-//	std::vector<std::string> names = {"pop", "add", "sub", "mul", "div", "mod", "exit", "print", "dump", "null"};
-//	int i = 0;
-//	while (names[i] != "null")
-//	{
-//		if (names[i] == oper)
-//		{
-//			(_vm->*func[i])();
-//			break;
-//		}
-//		i++;
-//	}
-//}

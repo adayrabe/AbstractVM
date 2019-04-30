@@ -24,17 +24,11 @@ typedef struct 	s_lexeme
 
 typedef struct 	s_flags
 {
-	bool showErrors;
-	bool printStack ;
-	bool doOperaions;
+	bool showErrors = false;
+	bool printStack = false;
+	bool doOperations = false;
 }				t_flags;
 
 void doOperator(t_lexeme *oper, AbstractVM &vm);
-//bool parseLine(std::string &line, std::vector<std::string> &messages, bool readFromCin, AbstractVM &vm, t_flags &flags);
-//void doWithNumber(std::string &line, std::string &oper, AbstractVM &vm);
-//void skipSpaces(std::string &temp);
-//std::string getWord(std::string &line);
-//void parseFile(std::string &str, t_flags &flags);
-//void parse(std::istream &is, t_flags &flags, bool readFromCin);
 
 #endif //ABSTRACTVM_PARSELINE_HPP
