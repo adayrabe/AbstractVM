@@ -6,6 +6,7 @@
 //#include <string>
 #include "CreateOperand.hpp"
 #include <sstream>
+#include <iomanip>
 
 template <eOperandType T>
 class Operand : public IOperand
@@ -15,6 +16,8 @@ class Operand : public IOperand
 		long double _value;
 		std::string _str;
 		int _precision;
+		int _floatPrecision;
+
 	public:
 		Operand<T>() = delete;
 		explicit Operand<T>(std::string const &value) : _type(T)
@@ -48,20 +51,27 @@ class Operand : public IOperand
 			return type;
 		}
 
-		std::string makeString(long double num, eOperandType type) const
+		std::string makeString(long double num, eOperandType type, size_t precision) const
 		{
 			if (type == eOperandType::Int8 || type == eOperandType::Int16 || type == eOperandType::Int32)
 				return std::to_string(static_cast<long>(num));
 			else
 			{
-//				return std::to_string(static_cast<long double>(num));
-
 				std::stringstream ss;
-				ss << num;
+				ss << std::setprecision(precision) << num;
 				std::string res;
 				ss >> res;
 				return res;
 			}
+		}
+
+		size_t getPrecision(IOperand const &op1, IOperand const &op2) const
+		{
+			if (op1.toString().length() > op2.toString().length())
+				return op1.toString().length();
+			else
+				return op2.toString().length();
+
 		}
 
 		const IOperand *operator+(IOperand const &rhs) const override
@@ -71,7 +81,7 @@ class Operand : public IOperand
 
 			eOperandType type = makeType(rhs);
 			CreateOperand t;
-			std::string str = makeString(temp, type);
+			std::string str = makeString(temp, type, getPrecision(*this, rhs));
 			return t.createOperand(type, str);
 		}
 
@@ -82,7 +92,7 @@ class Operand : public IOperand
 
 			eOperandType type = makeType(rhs);
 			CreateOperand t;
-			std::string str = makeString(temp, type);
+			std::string str = makeString(temp, type, getPrecision(*this, rhs));
 			return t.createOperand(type, str);
 		}
 
@@ -92,7 +102,7 @@ class Operand : public IOperand
 			temp = _value * temp;
 
 			eOperandType type = makeType(rhs);
-			std::string str = makeString(temp, type);
+			std::string str = makeString(temp, type, getPrecision(*this, rhs));
 			CreateOperand t;
 			return t.createOperand(type, str);
 		}
@@ -105,7 +115,7 @@ class Operand : public IOperand
 
 			temp = _value / temp;
 			eOperandType type = makeType(rhs);
-			std::string str = makeString(temp, type);
+			std::string str = makeString(temp, type, getPrecision(*this, rhs));
 			CreateOperand t;
 			return t.createOperand(type, str);
 		}
@@ -123,7 +133,7 @@ class Operand : public IOperand
 
 			temp = static_cast<int>(_value) % temp;
 			eOperandType type = makeType(rhs);
-			std::string str = makeString(temp, type);
+			std::string str = makeString(temp, type, getPrecision(*this, rhs));
 			CreateOperand t;
 			return t.createOperand(type, str);
 		}
