@@ -111,9 +111,11 @@ void Parser::addOper(std::string &line, int l)
 		t_lexeme *temp = new t_lexeme(oper, l);
 		if (_flags.printStack)
 		{
+			std::cout << "Oper: "<< std::left << std::setw(4) << oper << " | " ;
+
 			if (oper != "print" && oper != "dump")
 				doOperator(temp, *_vm, false);
-			printStack(oper, std::string());
+			_vm->showStack();
 			if (oper == "print" || oper == "dump")
 				doOperator(temp, *_vm, false);
 		}
@@ -152,9 +154,10 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
 	if (_flags.printStack)
 	{
+		std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << value << " | " ;
 		if (oper != "assert")
 			doOperator(temp, *_vm, false);
-		printStack(oper, val);
+		_vm->showStack();
 		if (oper == "assert")
 			doOperator(temp, *_vm, false);
 	}
@@ -199,12 +202,6 @@ std::string Parser::getNum(std::string &line)
 const std::vector<t_lexeme *> &Parser::getOperands() const
 {
 	return _operands;
-}
-
-void Parser::printStack(std::string oper, std::string value)
-{
-	std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << value << " | " ;
-	_vm->showStack();
 }
 
 bool Parser::isHasError() const
