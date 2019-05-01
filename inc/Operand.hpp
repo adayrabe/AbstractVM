@@ -16,7 +16,6 @@ class Operand : public IOperand
 		long double _value;
 		std::string _str;
 		int _precision;
-		int _floatPrecision;
 
 	public:
 		Operand<T>() = delete;
@@ -26,11 +25,7 @@ class Operand : public IOperand
 
 			checkValue(temp, _type);
 			_value = temp;
-//			double te = static_cast<double>(_value);
-//			float ttt = static_cast<float>(_value);
 			_precision = static_cast<int>(_type);
-
-
 		}
 
 		Operand<T>(Operand<T> const &other) = default;
@@ -192,11 +187,6 @@ class Operand : public IOperand
 							i++;
 					}
 				}
-//				std::ostringstream oss;
-//				if (type == eOperandType::Float)
-//					oss << std::scientific << std::setprecision(7) << res;
-//				else
-//					oss << std::scientific << std::setprecision(16) << res;
 				if (type == eOperandType::Float)
 					_str = makeString(res, eOperandType::Float, str.length());
 				else

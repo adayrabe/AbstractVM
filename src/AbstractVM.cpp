@@ -218,13 +218,19 @@ void AbstractVM::mod()
 		push(a);
 		throw e;
 	}
-	catch (OperandExceptions::ZeroDivisionException &e)
+	catch (OperandExceptions::ZeroModuloException &e)
 	{
 		push(b);
 		push(a);
 		throw e;
 	}
-	catch (OperandExceptions::ZeroModuloException &e)
+	catch (OperandExceptions::FloatingPointModuloOfException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::FloatingPointModuloFromException &e)
 	{
 		push(b);
 		push(a);

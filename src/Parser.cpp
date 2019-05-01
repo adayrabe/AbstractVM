@@ -154,7 +154,7 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	t_lexeme *temp = new t_lexeme(oper, l, type, num);
 	if (_flags.printStack)
 	{
-		std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << value << " | " ;
+		std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << val << " | " ;
 		if (oper != "assert")
 			doOperator(temp, *_vm, false);
 		_vm->showStack();
