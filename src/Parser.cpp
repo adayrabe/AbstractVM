@@ -88,6 +88,8 @@ bool Parser::parseLine(std::string &line, int l)
 		if (line[0] == COMMENT_CHAR)
 			return true;
 		addOper(line, l);
+		if (line[0] == COMMENT_CHAR && line[1] == COMMENT_CHAR && _fromStdin)
+			return false;
 	}
 	skipSpaces(line);
 	if (line[0] && line[0] != COMMENT_CHAR)

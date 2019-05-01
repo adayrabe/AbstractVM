@@ -104,9 +104,9 @@ int main(int argc, char **argv)
 		else
 			for (auto v: files)
 			{
+				std::cout << "===========================================" << std::endl;
 				std::cout << "FILE " << v << std::endl;
 				parseFile(v, flags);
-				std::cout << "===========================================" << std::endl;
 			}
 	}
 	return 0;
