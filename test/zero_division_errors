@@ -1,0 +1,7 @@
+push double(56)
+push int8(0)
+div
+dump
+mod
+dump
+exit

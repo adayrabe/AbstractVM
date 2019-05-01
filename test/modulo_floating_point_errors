@@ -1,0 +1,11 @@
+push double(56)
+push int8(10)
+mod
+dump
+pop
+pop
+push int8(10)
+push double(56)
+mod
+dump
+exit
