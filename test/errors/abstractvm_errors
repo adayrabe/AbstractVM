@@ -1,0 +1,14 @@
+pop
+push int8(5)
+assert int16(5)
+add
+dump
+pop
+dump
+print
+push int16(100)
+print
+pop
+pop
+exit
+exit

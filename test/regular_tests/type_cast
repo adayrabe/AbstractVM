@@ -1,0 +1,11 @@
+push int8(100)
+push int16(1000)
+add
+dump
+push float(142.989898)
+sub
+dump
+push double(21312.21342434234234)
+mul
+dump
+exit

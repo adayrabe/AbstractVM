@@ -1,0 +1,6 @@
+modul
+push int8(5) ooo
+push int16 (4)
+push int32(5
+push int64(6)
+exit

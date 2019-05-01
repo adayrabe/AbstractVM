@@ -1,0 +1,3 @@
+push int16(100)
+print
+exit
