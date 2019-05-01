@@ -26,7 +26,11 @@ class Operand : public IOperand
 
 			checkValue(temp, _type);
 			_value = temp;
+//			double te = static_cast<double>(_value);
+//			float ttt = static_cast<float>(_value);
 			_precision = static_cast<int>(_type);
+
+
 		}
 
 		Operand<T>(Operand<T> const &other) = default;
@@ -57,17 +61,16 @@ class Operand : public IOperand
 				return std::to_string(static_cast<long>(num));
 			else
 			{
-				std::string res;
+				std::ostringstream oss;
 
-				if (precision > 6)
-				{
-					std::stringstream ss;
-
-					ss << std::setprecision(precision) << num;
-					ss >> res;
-				}
+				if (type == eOperandType::Float && precision > 7)
+					oss << std::scientific << std::setprecision(7) << num;
+				else if (type == eOperandType::Double && precision > 16)
+					oss << std::scientific << std::setprecision(16) << num;
 				else
-					res = std::to_string(num);
+					oss << num;
+				std::string res;
+				res = oss.str();
 				return res;
 			}
 		}
@@ -152,9 +155,6 @@ class Operand : public IOperand
 
 		~Operand() override = default;
 
-		//Int8, Int16, Int32 have to be of a form  [-]?[0..9]+
-		//Float, Double have to be of a form [-]?[0..9]+.[0..9]+
-		//Ohterwise exception
 		long double checkNum(std::string str, eOperandType type)
 		{
 			std::istringstream ss(str);
@@ -176,14 +176,31 @@ class Operand : public IOperand
 			else
 			{
 				if (str[i] == '.')
+				{
 					i++;
+					if (!isnumber(str[i]))
+						throw OperandExceptions::WrongCharacterException();
+					while (isnumber(str[i]))
+						i++;
+					if (str[i] == 'e')
+					{
+						i++;
+						if (str[i] != '+' && str[i] != '-')
+							throw OperandExceptions::WrongCharacterException();
+						i++;
+						while (isnumber(str[i]))
+							i++;
+					}
+				}
+//				std::ostringstream oss;
+//				if (type == eOperandType::Float)
+//					oss << std::scientific << std::setprecision(7) << res;
+//				else
+//					oss << std::scientific << std::setprecision(16) << res;
+				if (type == eOperandType::Float)
+					_str = makeString(res, eOperandType::Float, str.length());
 				else
-					throw OperandExceptions::WrongCharacterException();
-				if (!isnumber(str[i]))
-					throw OperandExceptions::WrongCharacterException();
-				while (isnumber(str[i]))
-					i++;
-				_str = str;
+					_str = makeString(res, eOperandType::Double, str.length());
 			}
 			while (isspace(str[i]))
 				i++;
@@ -222,8 +239,4 @@ class Operand : public IOperand
 					break;
 			}
 		}
-//		char toChar()
-//		{
-//			return static_cast<char>(_value);
-//		}
 };
