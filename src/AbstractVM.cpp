@@ -7,6 +7,7 @@
 #include "AbstractVM.hpp"
 #include "AbstractVMExceptions.hpp"
 #include "CreateOperand.hpp"
+#include "OperandExceptions.hpp"
 
 AbstractVM::AbstractVM():_exited(false)
 {}
@@ -90,7 +91,22 @@ void AbstractVM::add()
 	IOperand const *b;
 
 	getArgs(&a, &b);
-	push(*b + *a);
+	try
+	{
+		push(*b + *a);
+	}
+	catch (OperandExceptions::ValueOverflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ValueUnderflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
 	delete a;
 	delete b;
 }
@@ -101,7 +117,22 @@ void AbstractVM::sub()
 	IOperand const *b;
 
 	getArgs(&a, &b);
-	push(*b - *a);
+	try
+	{
+		push(*b - *a);
+	}
+	catch (OperandExceptions::ValueOverflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ValueUnderflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
 	delete a;
 	delete b;
 }
@@ -112,7 +143,22 @@ void AbstractVM::mul()
 	IOperand const *b;
 
 	getArgs(&a, &b);
-	push(*b * *a);
+	try
+	{
+		push(*b * *a);
+	}
+	catch (OperandExceptions::ValueOverflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ValueUnderflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
 	delete a;
 	delete b;
 
@@ -124,7 +170,28 @@ void AbstractVM::div()
 	IOperand const *b;
 
 	getArgs(&a, &b);
-	push(*b / *a);
+	try
+	{
+		push(*b / *a);
+	}
+	catch (OperandExceptions::ValueOverflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ValueUnderflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ZeroDivisionException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
 	delete a;
 	delete b;
 }
@@ -135,7 +202,34 @@ void AbstractVM::mod()
 	IOperand const *b;
 
 	getArgs(&a, &b);
-	push(*b % *a);
+	try
+	{
+		push(*b % *a);
+	}
+	catch (OperandExceptions::ValueOverflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ValueUnderflowException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ZeroDivisionException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
+	catch (OperandExceptions::ZeroModuloException &e)
+	{
+		push(b);
+		push(a);
+		throw e;
+	}
 	delete a;
 	delete b;
 }
