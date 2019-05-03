@@ -83,9 +83,9 @@ void parseInput(bool fromStdIn, t_flags &flags, std::istream &is)
 
 void parseFile(std::string &str, t_flags &flags)
 {
-	std::ifstream ifs(str);
-	if (ifs)
-		parseInput(false, flags, ifs);
+	std::fstream fs(str);
+	if (fs)
+		parseInput(false, flags, fs);
 	else
 		std::cout << "Error - " << strerror(errno) << std::endl;
 }
