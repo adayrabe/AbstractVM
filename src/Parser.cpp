@@ -122,7 +122,10 @@ void Parser::addOper(std::string &line, int l)
 				doOperator(temp, *_vm, false);
 		}
 		if (_flags.doOperations)
+		{
 			doOperator(temp, *_vm, false);
+			delete temp;
+		}
 		else
 			_operands.emplace_back(temp);
 	}
@@ -164,7 +167,10 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 			doOperator(temp, *_vm, false);
 	}
 	if (_flags.doOperations)
+	{
 		doOperator(temp, *_vm, false);
+		delete temp;
+	}
 	else
 		_operands.emplace_back(temp);
 }
