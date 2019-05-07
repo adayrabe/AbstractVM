@@ -5,6 +5,7 @@
 #include "functions.hpp"
 #include "Parser.hpp"
 #include "CreateOperand.hpp"
+#include "AbstractVMExceptions.hpp"
 
 s_lexeme::s_lexeme(std::string &name, int line) : name(name), line(line){}
 
@@ -41,7 +42,18 @@ void doOperator(t_lexeme *oper, AbstractVM &vm, bool hasError)
 		if (oper->name == "push")
 			vm.push(operand);
 		else
-			vm.assertV(operand);
+		{
+			try
+			{
+				vm.assertV(operand);
+			}
+			catch (AbstractVMExceptions::AssertException &e)
+			{
+				delete operand;
+				throw e;
+			}
+			delete operand;
+		}
 	}
 	else
 		doFromArray(oper->name, vm, hasError);
