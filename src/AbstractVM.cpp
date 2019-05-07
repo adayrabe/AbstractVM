@@ -51,6 +51,7 @@ void AbstractVM::pop()
 {
 	if (_stack.empty())
 		throw AbstractVMExceptions::PopOnEmptyStackException();
+	delete _stack.top();
 	_stack.pop();
 }
 

@@ -109,5 +109,6 @@ int main(int argc, char **argv)
 				parseFile(v, flags);
 			}
 	}
+	system("leaks avm");
 	return 0;
 }
