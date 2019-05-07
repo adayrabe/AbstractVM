@@ -53,17 +53,19 @@ void parseInput(bool fromStdIn, t_flags &flags, std::istream &is)
 
 	if (!p.parse(is))
 		return ;
-	bool hasError = p.isHasError();
+//	bool hasError = p.isHasError();
+	vm.setHasError(p.isHasError());
 	for (size_t i = 0; i < p.getOperands().size(); i++)
 	{
 		try
 		{
-			doOperator(p.getOperands()[i], vm, hasError);
+			doOperator(p.getOperands()[i], vm);
 		}
 		catch (std::exception &e)
 		{
 			std::cout << "Error at line " << p.getOperands()[i]->line << " - " << e.what() << std::endl;
-			hasError = true;
+			vm.setHasError(true);
+//			hasError = true;
 			if (!flags.showErrors)
 				return ;
 		}

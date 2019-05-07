@@ -14,6 +14,13 @@ class AbstractVM
 	private:
 		std::stack<IOperand const *>_stack;
 		bool _exited;
+		bool _hasError;
+	public:
+		void setHasError(bool hasError);
+
+	public:
+		bool isHasError() const;
+
 	public:
 		AbstractVM();
 

@@ -11,7 +11,7 @@ s_lexeme::s_lexeme(std::string &name, int line) : name(name), line(line){}
 
 s_lexeme::s_lexeme(std::string &name, int line, eOperandType &type, std::string &value): name(name), line(line),
 																						  type(type), value(value){}
-void doFromArray(std::string &oper, AbstractVM &vm, bool hasError)
+void doFromArray(std::string &oper, AbstractVM &vm)
 {
 	void (AbstractVM::*func[])() = {&AbstractVM::pop, &AbstractVM::add, &AbstractVM::sub, &AbstractVM::mul,
 									&AbstractVM::div, &AbstractVM::mod, &AbstractVM::exit, &AbstractVM::print,
@@ -22,7 +22,7 @@ void doFromArray(std::string &oper, AbstractVM &vm, bool hasError)
 	{
 		if (names[i] == oper)
 		{
-			if (!hasError || (oper != "print" && oper != "dump"))
+//			if (!vm.isHasError() || (oper != "print" && oper != "dump"))
 				(vm.*func[i])();
 			break;
 		}
@@ -32,7 +32,7 @@ void doFromArray(std::string &oper, AbstractVM &vm, bool hasError)
 		throw ParseExceptions::WrongCommandException();
 }
 
-void doOperator(t_lexeme *oper, AbstractVM &vm, bool hasError)
+void doOperator(t_lexeme *oper, AbstractVM &vm)
 {
 	CreateOperand t;
 
@@ -56,5 +56,5 @@ void doOperator(t_lexeme *oper, AbstractVM &vm, bool hasError)
 		}
 	}
 	else
-		doFromArray(oper->name, vm, hasError);
+		doFromArray(oper->name, vm);
 }

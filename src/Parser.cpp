@@ -116,16 +116,22 @@ void Parser::addOper(std::string &line, int l)
 			_operands.emplace_back(temp);
 			std::cout << "Oper: "<< std::left << std::setw(4) << oper << " | " ;
 			if (oper != "print" && oper != "dump")
-				doOperator(temp, *_vm, false);
+				doOperator(temp, *_vm);
 			_vm->showStack();
 			if (oper == "print" || oper == "dump")
-				doOperator(temp, *_vm, false);
+				doOperator(temp, *_vm);
 		}
 		if (_flags.doOperations)
 		{
 			t_lexeme temp(oper, l);
-			doOperator(&temp, *_vm, false);
+			doOperator(&temp, *_vm);
 		}
+		else if (!_flags.printStack)
+		{
+			t_lexeme *temp = new t_lexeme(oper, l);
+			_operands.emplace_back(temp);
+		}
+
 	}
 }
 
@@ -159,20 +165,21 @@ void Parser::doWithNumber(std::string &line, std::string &oper, int l)
 	if (_flags.printStack)
 	{
 		t_lexeme temp(oper, l, type, num);
-
+		t_lexeme *res = new t_lexeme(oper, l, type, num);
+		_operands.emplace_back(res);
 		std::cout << "Oper: "<< std::left << std::setw(4) << oper << " " << val << " | " ;
 		if (oper != "assert")
-			doOperator(&temp, *_vm, false);
+			doOperator(&temp, *_vm);
 		_vm->showStack();
 		if (oper == "assert")
-			doOperator(&temp, *_vm, false);
+			doOperator(&temp, *_vm);
 	}
 	if (_flags.doOperations)
 	{
-		doOperator(&temp, *_vm, false);
+		doOperator(&temp, *_vm);
 //		delete temp;
 	}
-	else
+	else if (!_flags.printStack)
 	{
 		t_lexeme *res = new t_lexeme(oper, l, type, num);
 		_operands.emplace_back(res);

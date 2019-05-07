@@ -57,6 +57,8 @@ void AbstractVM::pop()
 
 void AbstractVM::dump()
 {
+	if (_hasError)
+		return ;
 	std::stack<IOperand const *> temp = _stack;
 	while (!temp.empty())
 	{
@@ -247,7 +249,8 @@ void AbstractVM::print()
 		throw AbstractVMExceptions::PrintEmptyStackException();
 	if (_stack.top()->getType() != eOperandType::Int8)
 		throw AbstractVMExceptions::PrintNotCharException();
-	std::cout << static_cast<char>(atoi(_stack.top()->toString().c_str())) << std::endl;
+	if (!_hasError)
+		std::cout << static_cast<char>(atoi(_stack.top()->toString().c_str())) << std::endl;
 }
 
 void AbstractVM::exit()
@@ -276,4 +279,14 @@ void AbstractVM::showStack()
 			std::cout << ", ";
 	}
 	std::cout << "]\n";
+}
+
+bool AbstractVM::isHasError() const
+{
+	return _hasError;
+}
+
+void AbstractVM::setHasError(bool hasError)
+{
+	_hasError = hasError;
 }
