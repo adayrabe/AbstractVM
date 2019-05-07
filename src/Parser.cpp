@@ -110,9 +110,9 @@ void Parser::addOper(std::string &line, int l)
 			i++;
 		if (names[i] == "null")
 			throw ParseExceptions::WrongCommandException();
-		t_lexeme *temp = new t_lexeme(oper, l);
 		if (_flags.printStack)
 		{
+			t_lexeme *temp = new t_lexeme(oper, l);
 			_operands.emplace_back(temp);
 			std::cout << "Oper: "<< std::left << std::setw(4) << oper << " | " ;
 			if (oper != "print" && oper != "dump")
@@ -123,11 +123,9 @@ void Parser::addOper(std::string &line, int l)
 		}
 		if (_flags.doOperations)
 		{
-			doOperator(temp, *_vm, false);
-			delete temp;
+			t_lexeme temp(oper, l);
+			doOperator(&temp, *_vm, false);
 		}
-//		else
-//			_operands.emplace_back(temp);
 	}
 }
 
